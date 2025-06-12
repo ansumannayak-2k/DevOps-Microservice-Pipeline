@@ -7,6 +7,7 @@ pipeline {
         git url: 'https://github.com/ansumannayak-2k/DevOps-Microservice-Pipeline.git', branch: 'main'
       }
     }
+
     stage('Build user-service Docker Image') {
       steps {
         dir('microservices/user-service') {
@@ -14,14 +15,13 @@ pipeline {
         }
       }
     }
-    stage('Test user-service') {
+
+    stage('Test user-service in Docker') {
       steps {
-        dir('microservices/user-service') {
-          sh 'npm install'
-          sh 'npm test || echo "No tests configured"'
-        }
+        sh 'docker run --rm user-service:latest npm test || echo "No tests configured"'
       }
     }
+
     stage('Build product-service Docker Image') {
       steps {
         dir('microservices/product-service') {
@@ -29,14 +29,13 @@ pipeline {
         }
       }
     }
-    stage('Test product-service') {
+
+    stage('Test product-service in Docker') {
       steps {
-        dir('microservices/product-service') {
-          sh 'npm install'
-          sh 'npm test || echo "No tests configured"'
-        }
+        sh 'docker run --rm product-service:latest npm test || echo "No tests configured"'
       }
     }
+
     stage('Build frontend Docker Image') {
       steps {
         dir('microservices/frontend') {
@@ -44,6 +43,7 @@ pipeline {
         }
       }
     }
+
     stage('Success') {
       steps {
         echo 'Pipeline completed successfully!'
